@@ -21,7 +21,7 @@ Fixes:
 2) app loading time is too long, try to reduce it. There are several issues here. Try to scroll images - make sure app does not crash and there is no image flickering (one image is replaced by another one)
 3) Try to tap some image to open it. Image layout is broken (part of the image is out of screen).
 4) In image view we display when image was opened last time. It shows “no date”, if image was not opened before. Some why date is not refreshed, when you open image again and again.
-5) If you close image view, ImageMeta is not released (ping us, if this task takes too long, we will point in right direction)
+5) If you close image view, ImageMeta is not released (ping us, if this task takes too long, we will point you in the right direction)
 
 Features:
 6) Start storing ViewController data source after first app launch. Use CoreData or sqlite for that.
