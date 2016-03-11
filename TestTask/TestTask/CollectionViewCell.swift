@@ -18,41 +18,39 @@ class CollectionViewCell: UICollectionViewCell {
   }
   
   func configureForImage(name: String) {
-    self.loadThumbnail(name) { (thumb) -> Void in
-      self.imageView.image = thumb
+    
+    // Let's create a cache for the thumbnails so we won't create multiple thumbs of the same image
+    let cache = ImageCache.sharedCache
+    
+    // Check if the cache contains the thumb whith a specific name
+    guard let thumbnail = cache[name] else {
+      
+      // in case the thumb is not stored in the cache let's create it...
+      self.loadThumbnail(name) { (thumb) -> Void in
+        self.imageView.image = thumb
+        // and store it in the cache
+        cache[name] = thumb
+      }
+      return
     }
+    self.imageView.image = thumbnail
   }
   
   // MARK: -
   
   private func loadThumbnail(name: String, completion: (thumb: UIImage) -> Void) {
+    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
       let image = UIImage(named: name)!
-      let thumbnail = self.thumbnailFromImage(image)
-      
+      let thumbnail = image.getThumbnail()
       // need to notify the main thread to update the UI
       dispatch_async(dispatch_get_main_queue()) { () -> Void in
-        completion(thumb: thumbnail)        
+        completion(thumb: thumbnail)
       }
     }
   }
   
-  private func thumbnailFromImage(image: UIImage) -> UIImage {
-    let cgImage = image.CGImage
-    
-    let width = CGImageGetWidth(cgImage) / 3
-    let height = CGImageGetHeight(cgImage) / 3
-    let bitsPerComponent = CGImageGetBitsPerComponent(cgImage)
-    let bytesPerRow = CGImageGetBytesPerRow(cgImage)
-    let colorSpace = CGImageGetColorSpace(cgImage)
-    let bitmapInfo = CGImageGetBitmapInfo(cgImage)
-    
-    let context = CGBitmapContextCreate(nil, width, height, bitsPerComponent, bytesPerRow, colorSpace, bitmapInfo.rawValue)
-    
-    CGContextSetInterpolationQuality(context, CGInterpolationQuality.High)
-    
-    CGContextDrawImage(context, CGRect(origin: CGPointZero, size: CGSize(width: CGFloat(width), height: CGFloat(height))), cgImage)
-    
-    return UIImage(CGImage: CGBitmapContextCreateImage(context)!)
-  }
+  
+  // This method has been moved to UIImage+Extension as it could be reused in the future
+  //  private func thumbnailFromImage(image: UIImage) -> UIImage {
 }

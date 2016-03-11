@@ -33,24 +33,53 @@ class ViewController: UIViewController {
     
     self.loadData()
     self.collectionView.registerNib(UINib(nibName: "CollectionViewCell", bundle: nil), forCellWithReuseIdentifier: String(CollectionViewCell))
-    self.collectionView.reloadData()
+    
   }
-
+  
   // MARK: -
   
   private func loadData() {
     let startTime = CACurrentMediaTime()
     
-    for i in 0..<self.itemsCount {
-      let id = String.randomString(15)
-      if !self.uniqueKeys.contains(id) {
-        self.uniqueKeys.append(id)
-        self.dataSource.append((id: id, imageName: "\(i % 4).jpg"))
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
+      
+      
+      //      This operation takes a looooong time, probably better to put it on a background thread so it doesn't block the UI
+      //      for i in 0..<self.itemsCount {
+      //        let id = String.randomString(15)
+      //        if !self.uniqueKeys.contains(id) {
+      //          self.uniqueKeys.append(id)
+      //          self.dataSource.append((id: id, imageName: "\(i % 4).jpg"))
+      //        }
+      //      }
+      
+      
+      // First let's map the randomStrings to a set so there's no need to check if the collection contains the element
+      var set = Set<String>()
+      for _ in 0..<self.itemsCount {
+        set.insert(String.randomString(15))
+      }
+      
+      // Than map the set to uniqueKeys
+      self.uniqueKeys = Array(set)
+      
+      // and finally populate the dataSource array with the tuple (id, imageName)
+      self.dataSource = set.enumerate().map { (i, id) in
+        return (id: id, imageName: "\(i % 4).jpg")
+      }
+      
+      dispatch_async(dispatch_get_main_queue()) { () -> Void in
+        // let's reload the collection view data otherwise nothing will be displayed
+        self.collectionView.reloadData()
+        
+        let totalTimeSpend = Double(CACurrentMediaTime() - startTime)
+        print("total time spend:", totalTimeSpend)
+        
+        // With Array it runs in 15.4702635139984
+        // With Set   it runs in 0.322475198991015
       }
     }
     
-    let totalTimeSpend = Double(CACurrentMediaTime() - startTime)
-    print("total time spend:", totalTimeSpend)
   }
 }
 
@@ -65,7 +94,6 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
   func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
     let cell = collectionView.dequeueReusableCellWithReuseIdentifier(String(CollectionViewCell), forIndexPath: indexPath) as! CollectionViewCell
     let data = self.dataSource[indexPath.row]
-    
     cell.configureForImage(data.imageName)
     
     return cell
