@@ -30,7 +30,10 @@ class CollectionViewCell: UICollectionViewCell {
       let image = UIImage(named: name)!
       let thumbnail = self.thumbnailFromImage(image)
       
-      completion(thumb: thumbnail)
+      // need to notify the main thread to update the UI
+      dispatch_async(dispatch_get_main_queue()) { () -> Void in
+        completion(thumb: thumbnail)        
+      }
     }
   }
   
