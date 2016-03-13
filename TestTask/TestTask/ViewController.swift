@@ -65,7 +65,9 @@ class ViewController: UIViewController {
       
       // and finally populate the dataSource array with the tuple (id, imageName)
       self.dataSource = set.enumerate().map { (i, id) in
-        return (id: id, imageName: "\(i % 4).jpg")
+        //        return (id: id, imageName: "\(i % 4).jpg")
+        return (id: id, imageName: "\(i % 4)")
+        
       }
       
       dispatch_async(dispatch_get_main_queue()) { () -> Void in
