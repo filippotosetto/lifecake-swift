@@ -37,6 +37,9 @@ class ImageViewController: UIViewController {
     self.navigationController?.hidesBarsOnTap = true
     
     self.loadImage() { image in
+      guard let image = image else {
+        return
+      }
       self.imageView?.setupWithImage(image, inView: self.view)
       // Set Image View Constraint
       self.setConstraints()
@@ -58,14 +61,12 @@ class ImageViewController: UIViewController {
     self.navigationController?.dismissViewControllerAnimated(true, completion: nil)
   }
   
-  private func loadImage(completion: (image: UIImage) -> Void) {
-    
+  private func loadImage(completion: (image: UIImage?) -> Void) {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
-      guard let thumbnail = ImageCache.sharedCache[self.imageName.stringByReplacingOccurrencesOfString(".jpg", withString: "")] else {
-        return
-      }
+      let name = self.imageName.stringByReplacingOccurrencesOfString(".jpg", withString: "")
+      let image = UIImage.getThumbnail(name)
       dispatch_async(dispatch_get_main_queue()) { () -> Void in
-        completion(image: thumbnail)
+        completion(image:  image)
       }
     }
   }

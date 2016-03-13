@@ -20,27 +20,15 @@ class CollectionViewCell: UICollectionViewCell {
   }
   
   func configureForImage(name: String) {
-    // Better to dispatch the operation pn a serial queue, in this way we still perform everything on a background thread and don't block the main one
+    // Better to dispatch the operation on a serial queue, in this way we still perform everything on a background thread and don't block the main one
     // But in the same time we don't alloc too much memory during the image resizing operation
     dispatch_async(serialQueue) {
-      // Let's create a cache for the thumbnails so we won't create multiple thumbs of the same image
-      let cache = ImageCache.sharedCache
-      
-      // Check if the cache contains the thumb whith a specific name
-      guard let thumbnail = cache[name] else {
-        
-        // in case the thumb is not stored in the cache let's create it...
-        self.loadThumbnail(name) { (thumb) -> Void in
-          guard let thumb = thumb else {
-            return
-          }
-          self.setThumb(thumb)
-          // and store it in the cache
-          cache[name] = thumb
+      self.loadThumbnail(name) { (thumb) -> Void in
+        guard let thumb = thumb else {
+          return
         }
-        return
+        self.setThumb(thumb)
       }
-      self.setThumb(thumbnail)
     }
   }
   
