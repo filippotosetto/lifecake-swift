@@ -11,6 +11,7 @@ import UIKit
 class ImageMeta {
   
   private static var datesHistory = [String: [NSDate]]()
+  
   private var content: UIImage!
   private var name: String!
   
@@ -21,23 +22,19 @@ class ImageMeta {
   // MARK: -
   
   func findLastDate() -> String {
-    var dates = ImageMeta.datesHistory[self.name]
-    
-    if var dates = dates {
-      let lastDate = dates.last!
-      dates.append(NSDate())
-     
-      let calendar = NSCalendar.currentCalendar()
-      let components = calendar.components([.Hour, .Minute, .Second], fromDate: lastDate)
-      
-      return "\(components.hour):\(components.minute):\(components.second)"
-      
-    } else {
-      dates = [NSDate()]
-      ImageMeta.datesHistory[self.name] = dates
-      
+    guard var dates = ImageMeta.datesHistory[self.name] else {
+      ImageMeta.datesHistory[self.name] = [NSDate()]
       return "no date"
     }
+    
+    let lastDate = dates.last!
+    
+    dates.append(NSDate())
+    ImageMeta.datesHistory[self.name] = dates
+    
+    let calendar = NSCalendar.currentCalendar()
+    let components = calendar.components([.Hour, .Minute, .Second], fromDate: lastDate)
+    return "\(components.hour):\(components.minute):\(components.second)"
   }
   
   // MARK: -
