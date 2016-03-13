@@ -40,14 +40,17 @@ class ImageViewController: UIViewController {
       self.imageView?.setupWithImage(image, inView: self.view)
       // Set Image View Constraint
       self.setConstraints()
-      let imageMeta = ImageMeta(name: self.imageName, image: image)
+      self.imageMeta = ImageMeta(name: self.imageName, image: image)
       let label = UILabel(frame: CGRectMake(0, 0, 44, 320))
-      label.text = String(format: "Last opened: %@, size: %@", imageMeta.findLastDate(), imageMeta.imageSize())
+      label.text = String(format: "Last opened: %@, size: %@", self.imageMeta.findLastDate(), self.imageMeta.imageSize())
       label.font = UIFont.systemFontOfSize(10)
       self.navigationItem.titleView = label
     }
   }
   
+  deinit {
+    print("ImageVC deinit")
+  }
   
   // MARK: -
   
@@ -58,11 +61,12 @@ class ImageViewController: UIViewController {
   private func loadImage(completion: (image: UIImage) -> Void) {
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
-      let image = UIImage(named: self.imageName)!
-      
-      dispatch_async(dispatch_get_main_queue(), { () -> Void in
-        completion(image: image)
-      })
+      guard let thumbnail = ImageCache.sharedCache[self.imageName.stringByReplacingOccurrencesOfString(".jpg", withString: "")] else {
+        return
+      }
+      dispatch_async(dispatch_get_main_queue()) { () -> Void in
+        completion(image: thumbnail)
+      }
     }
   }
 }

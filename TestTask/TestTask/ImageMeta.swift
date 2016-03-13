@@ -15,7 +15,8 @@ class ImageMeta {
   private var content: UIImage!
   private var name: String!
   
-  lazy var imageSize: () -> String = {
+  // need to use unowned self here to resolve a strong reference cycle
+  lazy var imageSize: () -> String = { [unowned self] in
     return "\(self.content.size)"
   }
   
