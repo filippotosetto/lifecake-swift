@@ -26,6 +26,11 @@
 		126EC6051C91F3F500AA4345 /* 3.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 126EC6001C91F3F500AA4345 /* 3.jpg */; };
 		126EC6061C91F3F500AA4345 /* 4.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 126EC6011C91F3F500AA4345 /* 4.jpg */; };
 		12AF5A5D1C92DE5000EDC9E6 /* TestLayout.xib in Resources */ = {isa = PBXBuildFile; fileRef = 12AF5A5C1C92DE5000EDC9E6 /* TestLayout.xib */; };
+		4185E1F51C96B47200FFDD00 /* TestTask.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4185E1F31C96B47200FFDD00 /* TestTask.xcdatamodeld */; };
+		4185E1F71C96B48D00FFDD00 /* NSManagedObjectContext+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4185E1F61C96B48D00FFDD00 /* NSManagedObjectContext+Extensions.swift */; };
+		4185E1F91C96B4F200FFDD00 /* ManagedObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4185E1F81C96B4F200FFDD00 /* ManagedObject.swift */; };
+		4185E2031C96B5AA00FFDD00 /* ImageItem+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4185E2011C96B5AA00FFDD00 /* ImageItem+CoreDataProperties.swift */; };
+		4185E2041C96B5AA00FFDD00 /* ImageItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4185E2021C96B5AA00FFDD00 /* ImageItem.swift */; };
 		41F920E21C931AC80017ACB2 /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41F920E11C931AC80017ACB2 /* ImageCache.swift */; };
 		41F920E41C9331990017ACB2 /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41F920E31C9331990017ACB2 /* UIImage+Extension.swift */; };
 /* End PBXBuildFile section */
@@ -52,6 +57,11 @@
 		126EC6001C91F3F500AA4345 /* 3.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 3.jpg; sourceTree = "<group>"; };
 		126EC6011C91F3F500AA4345 /* 4.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 4.jpg; sourceTree = "<group>"; };
 		12AF5A5C1C92DE5000EDC9E6 /* TestLayout.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TestLayout.xib; sourceTree = "<group>"; };
+		4185E1F41C96B47200FFDD00 /* TestTask.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TestTask.xcdatamodel; sourceTree = "<group>"; };
+		4185E1F61C96B48D00FFDD00 /* NSManagedObjectContext+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSManagedObjectContext+Extensions.swift"; sourceTree = "<group>"; };
+		4185E1F81C96B4F200FFDD00 /* ManagedObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManagedObject.swift; sourceTree = "<group>"; };
+		4185E2011C96B5AA00FFDD00 /* ImageItem+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ImageItem+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		4185E2021C96B5AA00FFDD00 /* ImageItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageItem.swift; sourceTree = "<group>"; };
 		41F920E11C931AC80017ACB2 /* ImageCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageCache.swift; sourceTree = "<group>"; };
 		41F920E31C9331990017ACB2 /* UIImage+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -87,6 +97,7 @@
 		126EC5DD1C91E0A600AA4345 /* TestTask */ = {
 			isa = PBXGroup;
 			children = (
+				4185E1F21C96B46000FFDD00 /* Data Model */,
 				126EC5DE1C91E0A600AA4345 /* AppDelegate.swift */,
 				126EC5E51C91E0A600AA4345 /* Assets.xcassets */,
 				126EC5F41C91EF3E00AA4345 /* CollectionViewCell.swift */,
@@ -118,6 +129,18 @@
 				126EC6011C91F3F500AA4345 /* 4.jpg */,
 			);
 			path = Images;
+			sourceTree = "<group>";
+		};
+		4185E1F21C96B46000FFDD00 /* Data Model */ = {
+			isa = PBXGroup;
+			children = (
+				4185E1F31C96B47200FFDD00 /* TestTask.xcdatamodeld */,
+				4185E1F61C96B48D00FFDD00 /* NSManagedObjectContext+Extensions.swift */,
+				4185E1F81C96B4F200FFDD00 /* ManagedObject.swift */,
+				4185E2011C96B5AA00FFDD00 /* ImageItem+CoreDataProperties.swift */,
+				4185E2021C96B5AA00FFDD00 /* ImageItem.swift */,
+			);
+			name = "Data Model";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -203,12 +226,17 @@
 			files = (
 				1250E1DC1C92C03900D5FD9E /* ImageView.swift in Sources */,
 				126EC5E11C91E0A600AA4345 /* ViewController.swift in Sources */,
+				4185E1F91C96B4F200FFDD00 /* ManagedObject.swift in Sources */,
 				41F920E21C931AC80017ACB2 /* ImageCache.swift in Sources */,
 				41F920E41C9331990017ACB2 /* UIImage+Extension.swift in Sources */,
 				126EC5F31C91EAFB00AA4345 /* String+Extension.swift in Sources */,
 				1250E1D91C92BF8400D5FD9E /* ImageViewController.swift in Sources */,
+				4185E1F51C96B47200FFDD00 /* TestTask.xcdatamodeld in Sources */,
 				126EC5F61C91EF3E00AA4345 /* CollectionViewCell.swift in Sources */,
+				4185E1F71C96B48D00FFDD00 /* NSManagedObjectContext+Extensions.swift in Sources */,
+				4185E2031C96B5AA00FFDD00 /* ImageItem+CoreDataProperties.swift in Sources */,
 				126EC5DF1C91E0A600AA4345 /* AppDelegate.swift in Sources */,
+				4185E2041C96B5AA00FFDD00 /* ImageItem.swift in Sources */,
 				1250E1E01C92D46400D5FD9E /* ImageMeta.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -303,6 +331,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = TestTask/Info.plist;
@@ -310,6 +339,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.TestTask;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
@@ -317,6 +348,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = TestTask/Info.plist;
@@ -324,6 +356,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.TestTask;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 			};
 			name = Release;
 		};
@@ -349,6 +382,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		4185E1F31C96B47200FFDD00 /* TestTask.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				4185E1F41C96B47200FFDD00 /* TestTask.xcdatamodel */,
+			);
+			currentVersion = 4185E1F41C96B47200FFDD00 /* TestTask.xcdatamodel */;
+			path = TestTask.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 126EC5D31C91E0A600AA4345 /* Project object */;
 }

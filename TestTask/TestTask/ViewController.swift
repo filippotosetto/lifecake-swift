@@ -7,14 +7,14 @@
 //
 
 import UIKit
+import CoreData
 
 class ViewController: UIViewController {
   
   @IBOutlet private weak var collectionView: UICollectionView!
   
-  private var dataSource = [(id: String, imageName: String)]()
-  private var uniqueKeys = [String]()
-  private let itemsCount = 10000
+  var managedObjectContext: NSManagedObjectContext!
+  lazy var fetchedResultsController: NSFetchedResultsController = ImageItem.getFetchResultController(self.managedObjectContext, delegate: self)
   
   // MARK: - Initialization
   
@@ -31,57 +31,43 @@ class ViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    self.loadData()
     self.collectionView.registerNib(UINib(nibName: "CollectionViewCell", bundle: nil), forCellWithReuseIdentifier: String(CollectionViewCell))
     
+    do {
+      try self.fetchedResultsController.performFetch()
+    } catch {
+      let fetchError = error as NSError
+      print("\(fetchError), \(fetchError.userInfo)")
+    }
   }
   
-  // MARK: -
-  
-  private func loadData() {
-    let startTime = CACurrentMediaTime()
+  override func viewWillAppear(animated: Bool) {
+    super.viewWillAppear(animated)
     
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
-      
-      
-      //      This operation takes a looooong time, probably better to put it on a background thread so it doesn't block the UI
-      //      for i in 0..<self.itemsCount {
-      //        let id = String.randomString(15)
-      //        if !self.uniqueKeys.contains(id) {
-      //          self.uniqueKeys.append(id)
-      //          self.dataSource.append((id: id, imageName: "\(i % 4).jpg"))
-      //        }
-      //      }
-      
-      
-      // First let's map the randomStrings to a set so there's no need to check if the collection contains the element
-      var set = Set<String>()
-      for _ in 0..<self.itemsCount {
-        set.insert(String.randomString(15))
-      }
-      
-      // Than map the set to uniqueKeys
-      self.uniqueKeys = Array(set)
-      
-      // and finally populate the dataSource array with the tuple (id, imageName)
-      self.dataSource = set.enumerate().map { (i, id) in
-        //        return (id: id, imageName: "\(i % 4).jpg")
-        return (id: id, imageName: "\(i % 4)")
-        
-      }
-      
-      dispatch_async(dispatch_get_main_queue()) { () -> Void in
-        // let's reload the collection view data otherwise nothing will be displayed
-        self.collectionView.reloadData()
-        
-        let totalTimeSpend = Double(CACurrentMediaTime() - startTime)
-        print("total time spend:", totalTimeSpend)
-        
-        // With Array it runs in 15.4702635139984
-        // With Set   it runs in 0.322475198991015
+    // Listen to changes in managedObject
+    NSNotificationCenter.defaultCenter().addObserver(self, selector:"mergeContexts:", name: NSManagedObjectContextDidSaveNotification, object: nil)
+  }
+  
+  override func viewDidDisappear(animated: Bool) {
+    super.viewDidDisappear(animated)
+    // Remove Observer
+    NSNotificationCenter.defaultCenter().removeObserver(self, name: NSManagedObjectContextDidSaveNotification, object: nil)
+  }
+  
+  // Merge different contexts, useful after batch updates in a background managedContext
+  func mergeContexts(notification: NSNotification) {
+    if notification.object as? NSManagedObjectContext != self.managedObjectContext {
+      self.managedObjectContext.performChanges() {
+        self.managedObjectContext.mergeChangesFromContextDidSaveNotification(notification)
       }
     }
-    
+  }
+}
+
+extension ViewController: NSFetchedResultsControllerDelegate {
+  // MARK: Fetched Results Controller Delegate Methods
+  func controllerDidChangeContent(controller: NSFetchedResultsController) {
+    self.collectionView.reloadData()
   }
 }
 
@@ -90,21 +76,24 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
   // MARK: - UICollectionViewDataSource
   
   func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-    return self.dataSource.count
+    if let sections = fetchedResultsController.sections {
+      let sectionInfo = sections[section]
+      return sectionInfo.numberOfObjects
+    }
+    return 0
   }
   
   func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
     let cell = collectionView.dequeueReusableCellWithReuseIdentifier(String(CollectionViewCell), forIndexPath: indexPath) as! CollectionViewCell
-    let data = self.dataSource[indexPath.row]
+    let data = fetchedResultsController.objectAtIndexPath(indexPath) as! ImageItem
     cell.configureForImage(data.imageName)
-    
     return cell
   }
   
   // MARK: - UICollectionViewDelegate
   
   func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-    let data = self.dataSource[indexPath.row]
+    let data = fetchedResultsController.objectAtIndexPath(indexPath) as! ImageItem
     let imageController = ImageViewController(imageName: data.imageName)
     self.navigationController?.presentViewController(UINavigationController(rootViewController: imageController), animated: true, completion: nil)
   }
