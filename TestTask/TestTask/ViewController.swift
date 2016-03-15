@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreData
+import AVFoundation
 
 class ViewController: UIViewController {
   
@@ -30,6 +31,13 @@ class ViewController: UIViewController {
   
   override func viewDidLoad() {
     super.viewDidLoad()
+    // set collectionViewLayout delegate as this viewController
+    if let layout = collectionView?.collectionViewLayout as? LifecakeLayout {
+      layout.delegate = self
+    }
+    
+    // let's hide the navigation bar in case the phone is in landscape
+    self.navigationController?.hidesBarsWhenVerticallyCompact = true
     
     self.collectionView.registerNib(UINib(nibName: "CollectionViewCell", bundle: nil), forCellWithReuseIdentifier: String(CollectionViewCell))
     
@@ -99,5 +107,20 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
   }
 }
 
-
+extension ViewController : LifecakeLayoutDelegate {
+  
+  // MARK: - LifecakeLayoutDelegate
+  
+  func collectionView(collectionView:UICollectionView, heightForPhotoAtIndexPath indexPath: NSIndexPath, withWidth width: CGFloat) -> CGFloat {
+    let data = fetchedResultsController.objectAtIndexPath(indexPath) as! ImageItem
+    
+    if let photo = UIImage.getThumbnail(data.imageName) {
+      let boundingRect =  CGRect(x: 0, y: 0, width: width, height: CGFloat(MAXFLOAT))
+      // calculate a height that retains the photo’s aspect ratio, restricted to the cell’s width
+      let rect = AVMakeRectWithAspectRatioInsideRect(photo.size, boundingRect)
+      return rect.size.height
+    }
+    return 0.0
+  }
+}
 

@@ -51,10 +51,6 @@ class ImageViewController: UIViewController {
     }
   }
   
-  deinit {
-    print("ImageVC deinit")
-  }
-  
   // MARK: -
   
   @objc private func close() {

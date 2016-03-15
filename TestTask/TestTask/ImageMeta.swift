@@ -44,8 +44,4 @@ class ImageMeta {
     self.content = image
     self.name = name
   }
-  
-  deinit {
-    print("ImageMeta deinit")
-  }
 }
