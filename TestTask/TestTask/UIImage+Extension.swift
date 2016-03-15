@@ -16,10 +16,9 @@ extension UIImage {
     
     // Let's create a cache for the thumbnails so we won't create multiple thumbs of the same image
     let cache = ImageCache.sharedCache
-    
+    let imageSizeCache = ImageSizeCache.sharedCache
     // Check if the cache contains the thumb whith a specific name
     guard let thumbnail = cache[name] else {
-      
       // in case the thumb is not stored in the cache let's create it...
       let path = NSBundle.mainBundle().pathForResource(name, ofType: "jpg")
       let nsUrl = NSURL(fileURLWithPath: path!)
@@ -34,6 +33,8 @@ extension UIImage {
           ]
           let thumbnail = CGImageSourceCreateThumbnailAtIndex(imageSource, 0, newOptions).flatMap { UIImage(CGImage: $0) }
           
+          // Store image size in cache we'll need it when calculating cell size in collectionView
+          imageSizeCache[name] = NSValue(CGSize: (thumbnail?.size)!)
           // ....and store it in the cache
           cache[name] = thumbnail
           
@@ -42,6 +43,6 @@ extension UIImage {
       }
       return nil
     }
-    return thumbnail
+    return thumbnail as? UIImage
   }
 }

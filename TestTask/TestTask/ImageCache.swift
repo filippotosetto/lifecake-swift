@@ -20,14 +20,14 @@ class ImageCache {
 }
 
 extension NSCache {
-  subscript(key: String) -> UIImage? {
+  subscript(key: String) -> AnyObject? {
     get {
-      return objectForKey(key) as? UIImage
+      return objectForKey(key) 
     }
     set {
       // check if the object is already there
       guard let _ =  objectForKey(key) else {
-        if let value: UIImage = newValue {
+        if let value: AnyObject = newValue {
           setObject(value, forKey: key)
         } else {
           removeObjectForKey(key)
@@ -36,4 +36,12 @@ extension NSCache {
       }
     }
   }
+}
+
+class ImageSizeCache {
+  static let sharedCache: NSCache = {
+    let cache = NSCache()
+    cache.name = "ImageSizeCache"
+    return cache
+  }()
 }

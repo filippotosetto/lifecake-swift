@@ -10,9 +10,7 @@ import UIKit
 
 // As picture size is dynamic, let's declare a delegate that will return the height for each photo
 protocol LifecakeLayoutDelegate {
-  
-  func collectionView(collectionView:UICollectionView, heightForPhotoAtIndexPath indexPath:NSIndexPath,
-    withWidth:CGFloat) -> CGFloat
+  func collectionView(collectionView: UICollectionView, indexPath: NSIndexPath, withWidth: CGFloat) -> CGFloat
 }
 
 // Utilty enumaration to get current cell position in our layout
@@ -73,7 +71,7 @@ class LifecakeLayout: UICollectionViewLayout {
         let width = contentWidth / CGFloat(position == .Top ? 1 : 2)
         
         // get the photo height from the delegate
-        let photoHeight = delegate.collectionView(collectionView!, heightForPhotoAtIndexPath: indexPath, withWidth: width)
+        let photoHeight = delegate.collectionView(collectionView!, indexPath: indexPath, withWidth: width)
         
         // Add a bit of padding
         let height = photoHeight + cellPadding

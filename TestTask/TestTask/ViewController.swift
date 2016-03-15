@@ -111,16 +111,31 @@ extension ViewController : LifecakeLayoutDelegate {
   
   // MARK: - LifecakeLayoutDelegate
   
-  func collectionView(collectionView:UICollectionView, heightForPhotoAtIndexPath indexPath: NSIndexPath, withWidth width: CGFloat) -> CGFloat {
-    let data = fetchedResultsController.objectAtIndexPath(indexPath) as! ImageItem
+  func collectionView(collectionView:UICollectionView, indexPath: NSIndexPath, withWidth width: CGFloat) -> CGFloat {
     
-    if let photo = UIImage.getThumbnail(data.imageName) {
-      let boundingRect =  CGRect(x: 0, y: 0, width: width, height: CGFloat(MAXFLOAT))
-      // calculate a height that retains the photo’s aspect ratio, restricted to the cell’s width
-      let rect = AVMakeRectWithAspectRatioInsideRect(photo.size, boundingRect)
-      return rect.size.height
-    }
-    return 0.0
+    let imageSize = getImageSize(indexPath)
+    
+    let boundingRect =  CGRect(x: 0, y: 0, width: width, height: CGFloat(MAXFLOAT))
+    // calculate a height that retains the photo’s aspect ratio, restricted to the cell’s width
+    let rect = AVMakeRectWithAspectRatioInsideRect(imageSize, boundingRect)
+    return rect.size.height
   }
 }
 
+
+extension ViewController {
+  private func getImageSize(indexPath: NSIndexPath) -> CGSize {
+    
+    let data = fetchedResultsController.objectAtIndexPath(indexPath) as! ImageItem
+    
+    // Check if size has already been stored in our cache
+    guard let size = ImageSizeCache.sharedCache[data.imageName] as? NSValue else {
+      // Force to create thumb and consequently save image size in the Size Cache
+      UIImage.getThumbnail(data.imageName)
+      let size = ImageSizeCache.sharedCache[data.imageName] as? NSValue
+      return size!.CGSizeValue()
+    }
+    
+    return size.CGSizeValue()
+  }
+}
