@@ -50,11 +50,16 @@ class LifecakeLayout: UICollectionViewLayout {
     return CGRectGetWidth(collectionView!.bounds) - (insets.left + insets.right)
   }
   
+  // check if layout should be recalculated
+  private var shouldRecalculateLayout = false
+  
   // Prepare layout for the whole collection view
   // This method is called before the actual layout takes place
   override func prepareLayout() {
     
     if cache.isEmpty {
+      
+      shouldRecalculateLayout = false
       
       var yOffset:     CGFloat = 0
       var leftHeight:  CGFloat = 0
@@ -104,11 +109,14 @@ class LifecakeLayout: UICollectionViewLayout {
     }
   }
   
-  // use this method to invalidate the layour and make it recalculate it
   override func shouldInvalidateLayoutForBoundsChange(newBounds: CGRect) -> Bool {
-    // We need to invalidate the cache otherwise nothing happen when the screen rotates
+    return shouldRecalculateLayout
+  }
+  
+  // this method is called by ViewController when the device rotates so it forces the Layout to refresh itself
+  func forceRefreshLayout() {
+    shouldRecalculateLayout = true
     cache.removeAll()
-    return true
   }
   
   // Returns the whole collectionView size

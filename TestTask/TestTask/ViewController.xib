@@ -8,6 +8,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ViewController" customModule="TestTask" customModuleProvider="target">
             <connections>
                 <outlet property="collectionView" destination="gCy-nd-0wV" id="45h-nS-dbA"/>
+                <outlet property="collectionViewLayout" destination="pML-YJ-rLR" id="fcy-6H-JmR"/>
                 <outlet property="view" destination="iN0-l3-epB" id="hgP-8L-2S7"/>
             </connections>
         </placeholder>

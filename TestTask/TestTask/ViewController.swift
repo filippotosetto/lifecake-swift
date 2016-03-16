@@ -13,13 +13,12 @@ import AVFoundation
 class ViewController: UIViewController {
   
   @IBOutlet private weak var collectionView: UICollectionView!
+  @IBOutlet weak var collectionViewLayout: LifecakeLayout!
   
   var managedObjectContext: NSManagedObjectContext!
   lazy var fetchedResultsController: NSFetchedResultsController = {
     return ImageItem.fetchResultController(self.managedObjectContext, resultControllerDelegate: self)
   }()
-  // MARK: - Initialization
-  
   
   required init?(coder aDecoder: NSCoder) {
     super.init(coder: aDecoder)
@@ -71,6 +70,10 @@ class ViewController: UIViewController {
         self.managedObjectContext.mergeChangesFromContextDidSaveNotification(notification)
       }
     }
+  }
+  
+  override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
+    collectionViewLayout.forceRefreshLayout()
   }
 }
 
