@@ -15,9 +15,11 @@ class ViewController: UIViewController {
   @IBOutlet private weak var collectionView: UICollectionView!
   
   var managedObjectContext: NSManagedObjectContext!
-  lazy var fetchedResultsController: NSFetchedResultsController = ImageItem.getFetchResultController(self.managedObjectContext, delegate: self)
-  
+  lazy var fetchedResultsController: NSFetchedResultsController = {
+    return ImageItem.fetchResultController(self.managedObjectContext, resultControllerDelegate: self)
+  }()
   // MARK: - Initialization
+  
   
   required init?(coder aDecoder: NSCoder) {
     super.init(coder: aDecoder)

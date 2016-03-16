@@ -37,15 +37,11 @@ extension ManagedObjectType where Self: ManagedObject {
     return result
   }
   
-  public static func getFetchResultController(context: NSManagedObjectContext, delegate: NSFetchedResultsControllerDelegate) -> NSFetchedResultsController {
+  public static func getFetchResultController(context: NSManagedObjectContext, @noescape configurationBlock: NSFetchRequest -> () = { _ in }) -> NSFetchedResultsController {
     let request = NSFetchRequest(entityName: Self.entityName)
-    
-    let sortDescriptor = NSSortDescriptor(key: "index", ascending: true)
-    request.sortDescriptors = [sortDescriptor]
+    configurationBlock(request)
     
     let fetchedResultsController = NSFetchedResultsController(fetchRequest: request, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
-    
-    fetchedResultsController.delegate = delegate
     
     return fetchedResultsController
   }

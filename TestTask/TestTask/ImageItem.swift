@@ -18,5 +18,14 @@ public final class ImageItem: ManagedObject {
     item.imageName = imageName
     item.index = index
     return item
-  }  
+  }
+  
+  class func fetchResultController(context: NSManagedObjectContext, resultControllerDelegate: NSFetchedResultsControllerDelegate) -> NSFetchedResultsController {
+    let fetchedResultController = ImageItem.getFetchResultController(context, configurationBlock: { (request) -> () in
+      let sortDescriptor = NSSortDescriptor(key: "index", ascending: true)
+      request.sortDescriptors = [sortDescriptor]
+    })
+    fetchedResultController.delegate = resultControllerDelegate
+    return fetchedResultController
+  }
 }
